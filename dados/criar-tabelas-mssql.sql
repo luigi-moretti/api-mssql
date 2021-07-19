@@ -1,0 +1,38 @@
+create TABLE CTE (
+    id int not null IDENTITY PRIMARY key,
+    CHAVECTE VARCHAR(100),
+    EMITENTECTE VARCHAR(100),
+    REMETENTECTE VARCHAR(100),
+    DESTINATAIOCRE VARCHAR(100),
+    DATAAUTORIZACAOCTE DATETIME
+);
+
+select * from cte;
+
+create TABLE MDFE (
+    id int not null IDENTITY PRIMARY key,
+    CHAVEMDFE VARCHAR(100),
+    EMITENTEMDFE VARCHAR(100),
+    DATAAUTORIZACAOMDFE DATETIME
+);
+
+drop TABLE MDFE;
+
+select id, CHAVEMDFE, EMITENTEMDFE, Convert(VarChar(10), DATAAUTORIZACAOMDFE,103) data from MDFe;
+
+select * from MDFE where id = 1
+
+select * from MDFE where Convert(VarChar(10), DATAAUTORIZACAOMDFE,103) BETWEEN Convert(VarChar(10),('01/02/2021'), 103) and Convert(VarChar(10),('02/08/2021'), 103);
+
+
+
+IF NOT EXISTS (SELECT * 
+            FROM INFORMATION_SCHEMA.TABLES 
+            WHERE TABLE_NAME = 'MDFE')
+        BEGIN
+        create TABLE MDFE (
+            id int not null IDENTITY PRIMARY key,
+            CHAVEMDFE VARCHAR(100),
+            EMITENTEMDFE VARCHAR(100),
+            DATAAUTORIZACAOMDFE DATETIME)
+        END
