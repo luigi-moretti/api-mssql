@@ -3,6 +3,8 @@ class Tabelas {
         this.conexao = conexao;
         this.criarMDFe();
         this.criarCTe();
+        this.criarProcCTE();
+        this.criarProcMDFE();
     }
 
     criarMDFe() {
@@ -46,7 +48,43 @@ class Tabelas {
             if (erro) {
                 console.log(erro)
             } else {
-                console.log('Tabela CTe criada ou encontrada com sucesso')
+                console.log('Tabela CTe criada ou alterada com sucesso')
+            }
+        })
+    }
+
+    criarProcCTE() {
+        const sql = `
+        CREATE OR ALTER PROCEDURE consultaCTE
+        @dataInicial datetime = null,   
+        @dataFinal datetime = null
+        AS
+        SELECT * FROM CTE WHERE 1=1 and DATAAUTORIZACAOCTE BETWEEN @dataInicial AND @dataFinal
+        `;
+
+        this.conexao.query(sql, (erro) => {
+            if (erro) {
+                console.log(erro)
+            } else {
+                console.log('Procedure consultaCTE criada ou alterada com sucesso')
+            }
+        })
+    }
+
+    criarProcMDFE() {
+        const sql = `
+        CREATE OR ALTER PROCEDURE consultaMDFE
+        @dataInicial datetime = null,   
+        @dataFinal datetime = null
+        AS
+        SELECT * FROM MDFE WHERE 1=1 and DATAAUTORIZACAOMDFE BETWEEN @dataInicial AND @dataFinal
+        `;
+
+        this.conexao.query(sql, (erro) => {
+            if (erro) {
+                console.log(erro)
+            } else {
+                console.log('Procedure consultaMDFE  criada ou encontrada com sucesso')
             }
         })
     }

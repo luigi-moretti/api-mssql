@@ -36,7 +36,7 @@ IF NOT EXISTS (SELECT *
             EMITENTEMDFE VARCHAR(100),
             DATAAUTORIZACAOMDFE DATETIME)
         END
-
+;/*
 CREATE OR ALTER PROCEDURE consultaMDFE
 @dataInicial datetime = null,   
 @dataFinal datetime = null
@@ -50,15 +50,20 @@ AS
 		EXEC (@QUERYBASE)
 	END
 
+CREATE OR ALTER PROCEDURE consultaMDFE
+@dataInicial datetime = null,   
+@dataFinal datetime = null
+AS
+SELECT * FROM MDFE WHERE 1=1 and DATAAUTORIZACAOMDFE BETWEEN @dataInicial AND @dataFinal
 
---SELECT MDFE.*, @dataInicial dataInicial, @dataFinal dataFinal, @chaves chaves 
---FROM MDFE 
---WHERE 
---1=1
---DATAAUTORIZACAOMDFE BETWEEN @dataInicial AND @dataFinal
+CREATE OR ALTER PROCEDURE consultaCTE
+@dataInicial datetime = null,   
+@dataFinal datetime = null
+AS
+SELECT * FROM CTE WHERE 1=1 and DATAAUTORIZACAOCTE BETWEEN @dataInicial AND @dataFinal
 --and DATAAUTORIZACAOMDFE BETWEEN (case when @dataInicial is not null then @dataInicial else (GETDATE()-1) end) and (case when @dataFinal is not null then @dataFinal else (GETDATE()-1)end)
 --and CHAVEMDFE in (@chaves)
-
+*/
 --CHAVEMDFE in (case @chaves is not null then (@chaves)else)
 
 /*
@@ -70,4 +75,9 @@ AS
 
 
 --EXEC consultaMDFE @dataInicial = '01/02/2021', @dataFinal = '02/08/2021'; 
-EXEC consultaMDFE @dataInicial = CONVERT(DATE, '2021-07-01 11:04:00', 120), @dataFinal = '2021-07-02 13:04:00';
+--EXEC consultaMDFE @dataInicial = '2021-07-01 11:04:00', @dataFinal = '2021-07-02 13:04:00';
+
+CREATE OR ALTER PROCEDURE consultaCTEPorChave
+@chaves TABLE
+AS
+select * from CTE where CHAVECTE in @chaves

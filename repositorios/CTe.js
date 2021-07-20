@@ -6,8 +6,8 @@ module.exports={
         return query(sql);
     },
 
-    async buscaPorId(id){
-        const sql = 'select * from CTE where id = ?';
-        return query(sql, id);
+    async buscaPorData(parametros){
+        const procedure = 'consultaCTE';
+        return query('',parametros,procedure);
     }
 }

@@ -1,14 +1,30 @@
 const sql = require('mssql');
 const conexao = require('./conexao');
 
-const execuraQuery = async (query, parametros = '') => {
+const execuraQuery = async (query = '', parametros = [], procedure = '') => {
     try {
-        const conn = await conexao();
-        await sql.connect(conn);
-        const result = await sql.query(query, parametros)
-        return result.recordset
-    } catch (err) {
-        console.log(err)
+        let pool = await sql.connect(conexao)
+        if (query !== '') {
+            // Quando for Query
+            let resultadoQuery = pool.request();
+                parametros.forEach(element => {
+                    const key = Object.keys(element)[0];
+                    resultadoQuery.input(key, sql.DateTime, Object.values(element)[0])    
+                });
+            const resultado = await resultadoQuery.query(query)
+            return resultado.recordset
+        } else {
+            // Quando for Stored procedure
+            let resultadoProcedure = pool.request();
+                parametros.forEach(parametro=>{
+                    const key = Object.keys(parametro)[0];
+                    resultadoProcedure.input(key, sql.DateTime, Object.values(parametro)[0])
+                })
+                const resultado = await resultadoProcedure.execute(procedure)
+            return resultado.recordset
+        }
+    } catch (erro) {
+        throw new Error('Erro ao executar query no banco de dados')
     }
 
 }
