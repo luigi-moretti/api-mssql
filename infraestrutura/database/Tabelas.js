@@ -54,12 +54,58 @@ class Tabelas {
     }
 
     criarProcCTE() {
-        const sql = `
+        const sql = ` 
         CREATE OR ALTER PROCEDURE consultaCTE
-        @dataInicial datetime = null,   
-        @dataFinal datetime = null
+        @lista NVARCHAR(MAX) = null,
+        @status NVARCHAR(MAX) = null,
+        @dataInicial DATETIME = null,
+        @dataFinal DATETIME = null
+        
         AS
-        SELECT * FROM CTE WHERE 1=1 and DATAAUTORIZACAOCTE BETWEEN @dataInicial AND @dataFinal
+        DECLARE @pos INT
+        DECLARE @nextpos INT
+        DECLARE @valuelen INT
+        DECLARE @tbl TABLE (number NVARCHAR(MAX))
+        
+        
+        DECLARE @Spos INT
+        DECLARE @Snextpos INT
+        DECLARE @Svaluelen INT
+        DECLARE @Stbl TABLE (number NVARCHAR(MAX))
+        SELECT @pos = 0, @nextpos = 1;
+        
+        --IF @lista IS NOT NULL
+        WHILE @nextpos > 0
+        BEGIN
+            SELECT @nextpos = charindex(';', @lista, @pos + 1)
+            SELECT @valuelen = CASE WHEN @nextpos > 0
+                                    THEN @nextpos
+                                    ELSE len(@lista) + 1
+                                END - @pos - 1
+            INSERT @tbl (number)
+                VALUES (convert(NVARCHAR(MAX), substring(@lista, @pos + 1, @valuelen)))
+            SELECT @pos = @nextpos;
+        END
+        
+        
+        SELECT @Spos = 0, @Snextpos = 1;
+            WHILE @Snextpos > 0
+            BEGIN
+                SELECT @Snextpos = charindex(',', @status, @Spos + 1)
+                SELECT @Svaluelen = CASE WHEN @Snextpos > 0
+                                        THEN @Snextpos
+                                        ELSE len(@status) + 1
+                                    END - @Spos - 1
+                INSERT @Stbl (number)
+                    VALUES (convert(NVARCHAR(MAX), substring(@status, @Spos + 1, @Svaluelen)))
+                SELECT @Spos = @Snextpos;
+            END
+        select CTE.*
+        from CTE 
+        where 1=1
+        and (CASE WHEN @lista is NULL then 'A' else CTE.CHAVECTE end) in (select case when number is null then 'A' else number end from @tbl)
+        and (CASE when @status is NULL then 'A' else CTE.STATUS end) in (select  case when number is null then 'A' else number end from @Stbl)
+        and CTE.DATAAUTORIZACAOCTE BETWEEN @dataInicial and @dataFinal
         `;
 
         this.conexao.query(sql, (erro) => {
@@ -74,10 +120,55 @@ class Tabelas {
     criarProcMDFE() {
         const sql = `
         CREATE OR ALTER PROCEDURE consultaMDFE
-        @dataInicial datetime = null,   
-        @dataFinal datetime = null
+        @lista NVARCHAR(MAX) = null,
+        @status NVARCHAR(MAX) = null,
+        @dataInicial DATETIME = null,
+        @dataFinal DATETIME = null
+
         AS
-        SELECT * FROM MDFE WHERE 1=1 and DATAAUTORIZACAOMDFE BETWEEN @dataInicial AND @dataFinal
+        DECLARE @pos INT
+        DECLARE @nextpos INT
+        DECLARE @valuelen INT
+        DECLARE @tbl TABLE (number NVARCHAR(MAX))
+
+
+        DECLARE @Spos INT
+        DECLARE @Snextpos INT
+        DECLARE @Svaluelen INT
+        DECLARE @Stbl TABLE (number NVARCHAR(MAX))
+        SELECT @pos = 0, @nextpos = 1;
+
+        WHILE @nextpos > 0
+        BEGIN
+            SELECT @nextpos = charindex(';', @lista, @pos + 1)
+            SELECT @valuelen = CASE WHEN @nextpos > 0
+                                    THEN @nextpos
+                                    ELSE len(@lista) + 1
+                                END - @pos - 1
+            INSERT @tbl (number)
+                VALUES (convert(NVARCHAR(MAX), substring(@lista, @pos + 1, @valuelen)))
+            SELECT @pos = @nextpos;
+        END
+
+
+        SELECT @Spos = 0, @Snextpos = 1;
+            WHILE @Snextpos > 0
+            BEGIN
+                SELECT @Snextpos = charindex(',', @status, @Spos + 1)
+                SELECT @Svaluelen = CASE WHEN @Snextpos > 0
+                                        THEN @Snextpos
+                                        ELSE len(@status) + 1
+                                    END - @Spos - 1
+                INSERT @Stbl (number)
+                    VALUES (convert(NVARCHAR(MAX), substring(@status, @Spos + 1, @Svaluelen)))
+                SELECT @Spos = @Snextpos;
+            END
+        select MDFE.*
+        from MDFE 
+        where 1=1
+        and (CASE WHEN @lista is NULL then 'A' else MDFE.CHAVEMDFE end) in (select case when number is null then 'A' else number end from @tbl)
+        and (CASE when @status is NULL then 'A' else MDFE.STATUS end) in (select  case when number is null then 'A' else number end from @Stbl)
+        and MDFE.DATAAUTORIZACAOMDFE BETWEEN @dataInicial and @dataFinal
         `;
 
         this.conexao.query(sql, (erro) => {
