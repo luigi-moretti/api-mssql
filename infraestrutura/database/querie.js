@@ -7,9 +7,10 @@ const execuraQuery = async (query = '', parametros = [], procedure = '') => {
         if (query !== '') {
             // Quando for Query
             let resultadoQuery = pool.request();
-                parametros.forEach(element => {
-                    const key = Object.keys(element)[0];
-                    resultadoQuery.input(key, sql.DateTime, Object.values(element)[0])    
+                parametros.forEach(parametro => {
+                    const key = Object.keys(parametro)[0];
+                    const tipo = Object.values(parametro)[1];
+                    resultadoQuery.input(key, sql[tipo], Object.values(parametro)[0])  
                 });
             const resultado = await resultadoQuery.query(query)
             return resultado.recordset
@@ -19,7 +20,6 @@ const execuraQuery = async (query = '', parametros = [], procedure = '') => {
                 parametros.forEach(parametro=>{
                     const key = Object.keys(parametro)[0];
                     const tipo = Object.values(parametro)[1];
-                    console.log(Object.values(parametro))
                     resultadoProcedure.input(key, sql[tipo], Object.values(parametro)[0])
                 })
                 const resultado = await resultadoProcedure.execute(procedure)

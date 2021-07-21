@@ -189,7 +189,7 @@ and (CASE WHEN @lista is NULL then 'A' else MDFE.CHAVEMDFE end) in (select case 
 and (CASE when @status is NULL then 'A' else MDFE.STATUS end) in (select  case when number is null then 'A' else number end from @Stbl)
 and MDFE.DATAAUTORIZACAOMDFE BETWEEN @dataInicial and @dataFinal
 
-select * from CTE
+select * from MDFE
 
 update CTE set STATUS = 'CANCELADO' where id in (1,3,50,35,20,32,21,70)
 update MDFE set STATUS = 'CANCELADO' where id in (1,3,13,7,3)
