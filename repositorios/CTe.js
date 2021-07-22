@@ -44,7 +44,7 @@ module.exports = {
 
     atualizar(parametros){
         //const preparaId = [{id: id, tipo: 'Int'}];
-        const sql = `update CTE set chavecte = @chavecte,  emitentecte = @emitentecte, remetentecte = @remetentecte, destinataiocre = @destinatariocte, dataautorizacaocte = @dataautorizacao, status = @status where id = @id`;
+        const sql = `update CTE set chavecte = @chavecte,  emitentecte = @emitentecte, remetentecte = @remetentecte, destinatariocte = @destinatariocte, dataautorizacaocte = @dataautorizacao, status = @status where id = @id`;
         return query(sql, parametros);
     }
 }

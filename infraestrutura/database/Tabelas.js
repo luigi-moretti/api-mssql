@@ -76,7 +76,6 @@ class Tabelas {
         DECLARE @Stbl TABLE (number NVARCHAR(MAX))
         SELECT @pos = 0, @nextpos = 1;
         
-        --IF @lista IS NOT NULL
         WHILE @nextpos > 0
         BEGIN
             SELECT @nextpos = charindex(';', @lista, @pos + 1)

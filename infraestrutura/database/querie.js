@@ -10,6 +10,7 @@ const execuraQuery = async (query = '', parametros = [], procedure = '') => {
                 parametros.forEach(parametro => {
                     const key = Object.keys(parametro)[0];
                     const tipo = Object.values(parametro)[1];
+                    console.log(parametro)
                     resultadoQuery.input(key, sql[tipo], Object.values(parametro)[0])  
                 });
             const resultado = await resultadoQuery.query(query)
@@ -20,6 +21,7 @@ const execuraQuery = async (query = '', parametros = [], procedure = '') => {
                 parametros.forEach(parametro=>{
                     const key = Object.keys(parametro)[0];
                     const tipo = Object.values(parametro)[1];
+                    console.log(parametro)
                     resultadoProcedure.input(key, sql[tipo], Object.values(parametro)[0])
                 })
                 const resultado = await resultadoProcedure.execute(procedure)
